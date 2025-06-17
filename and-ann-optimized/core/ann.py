@@ -23,7 +23,7 @@ class AndAnn:
 
     def train(self) -> tuple[float, float, float]:
         # Initialize weights and biases
-        w1_new, w2_new = self.weights[0], self.weights[1]
+        w1_new, w2_new = self.weights[0][0], self.weights[1][0]
         b1_new = self.bias
 
         # Main loop for epochs
@@ -70,12 +70,17 @@ class AndAnn:
             if mean_squared_error <= self.target_error:
                 # If the training is successful, write the parameters to a file
                 with open("data/optimized_parameters.txt", "w") as file:
-                    file.write(f"{w1_new.item()},{w2_new.item()},{b1_new.item()}")
+                    file.write(f"{w1_new},{w2_new},{b1_new}")
                 return w1_new, w2_new, b1_new
 
             # Print epoch every 100 for monitoring on the CLI
             if epoch % 100 == 0:
-                print(f"| Epoch: {epoch} | Error: {mean_squared_error} |")
+                print(
+                    f"Epoch: {epoch:<5} "
+                    f"| Error: {mean_squared_error:<12.8f} "
+                    f"| Weights: [{w1_new:<12.8f}, {w2_new:<12.8f}] "
+                    f"| Bias: [{b1_new:<12.8f}]"
+                )
 
         # Return negatives if failed to find optimized weights and bias
         return -1, -1, -1
