@@ -26,76 +26,56 @@ class AndAnn:
         w1_new, w2_new = self.weights[0], self.weights[1]
         b1_new = self.bias
 
-        # Initialize variables for monitoring
-        current_error = 1
-        epoch = 0
-
-        # Count training data rows for MSE computation later
-        training_size = self.training_data.shape[0]
-
         # Main loop for epochs
         for epoch in range(self.target_epochs):
-            # Early return if we converged to desired error or max epochs reached
-            if current_error <= self.target_error or epoch >= self.target_epochs:
+            # Initialize error to zero every iter for fresh calculation
+            accumulated_error = 0
+
+            # Main training loop
+            for entry in self.training_data:
+                # Extract inputs and target from training data
+                i1, i2, target = entry
+
+                # Initialize the previously new values into old values every new iter
+                w1_old = w1_new
+                w2_old = w2_new
+                b1_old = b1_new
+
+                # Step 1: Perform forward pass
+                net_output, output = perform_forward_pass(
+                    i1, i2, w1_old, w2_old, b1_old
+                )
+
+                # Step 2: Accumulate error (For MSE)
+                accumulated_error += ((target - output) ** 2) / 2
+
+                # Step 3: Perform backpropagation
+                de_dout = output - target
+                dout_dnet = relu_derivative(net_output)
+
+                de_dw1 = perform_backpropagation(de_dout, dout_dnet, i1)
+                de_dw2 = perform_backpropagation(de_dout, dout_dnet, i2)
+                de_db1 = perform_backpropagation(de_dout, dout_dnet, 1)
+
+                # Calculate gradients
+                w1_new = w1_old - (self.learning_rate * de_dw1)
+                w2_new = w2_old - (self.learning_rate * de_dw2)
+                b1_new = b1_old - (self.learning_rate * de_db1)
+
+            # Get MSE
+            training_size = self.training_data.shape[0]
+            mean_squared_error = accumulated_error / training_size
+
+            # Check if ANN converged to desired error
+            if mean_squared_error <= self.target_error:
                 # If the training is successful, write the parameters to a file
                 with open("data/optimized_parameters.txt", "w") as file:
                     file.write(f"{w1_new.item()},{w2_new.item()},{b1_new.item()}")
                 return w1_new, w2_new, b1_new
 
-            # Initialize the previously new values into old values every new iter
-            w1_old = w1_new
-            w2_old = w2_new
-            b1_old = b1_new
-
-            # Gradients
-            de_dw1 = 0
-            de_dw2 = 0
-            de_db1 = 0
-
-            # For storing results of forward pass
-            forward_results = []
-
-            # Initialize error to zero every iter for fresh calculation
-            current_error = 0
-
-            # Step 1: Perform forward pass through the entire dataset
-            for entry in self.training_data:
-                # Extract inputs and target from training data
-                i1, i2, target = entry
-
-                # Forward pass for each data point
-                net_output, output = perform_forward_pass(
-                    i1, i2, w1_old, w2_old, b1_old
-                )
-
-                # Accumulate all results of forward pass
-                forward_results.append((i1, i2, target, net_output, output))
-
-                # Accumulate error for MSE calculation later
-                current_error += ((target - output) ** 2) / 2
-
-            # Then calculate gradients from the stored results
-            for i1, i2, target, net_output, output in forward_results:
-                de_dw1 += (output - target) * (relu_derivative(net_output)) * i1
-                de_dw2 += (output - target) * (relu_derivative(net_output)) * i2
-                de_db1 += (output - target) * (relu_derivative(net_output)) * 1
-
-            # Average gradients
-            de_dw1 /= training_size
-            de_dw2 /= training_size
-            de_db1 /= training_size
-
-            # Step 2: Calculate MSE
-            current_error /= training_size
-
             # Print epoch every 100 for monitoring on the CLI
             if epoch % 100 == 0:
-                print(f"| Epoch: {epoch} | Error: {current_error} |")
-
-            # Step 3: Perform backpropagation
-            w1_new, w2_new, b1_new = perform_backpropagation(
-                w1_old, w2_old, b1_old, de_dw1, de_dw2, de_db1, self.learning_rate
-            )
+                print(f"| Epoch: {epoch} | Error: {mean_squared_error} |")
 
         # Return negatives if failed to find optimized weights and bias
         return -1, -1, -1
