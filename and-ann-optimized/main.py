@@ -12,7 +12,7 @@ def main() -> None:
         w1, w2, b1 = and_ann.train()
 
         # Check if the result of training is -1 (meaning didn't converge)
-        if w1 == -1:
+        if w1 == -1 and w2 == -1 and b1 == -1:
             print("Training failed to converge within target epochs.")
         else:
             print(f"Optimized Weights: [{w1}, {w2}], Optimized Bias: [{b1}]")
