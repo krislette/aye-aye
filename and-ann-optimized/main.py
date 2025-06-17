@@ -2,7 +2,7 @@ import sys
 from core.ann import AndAnn
 
 
-def main():
+def main() -> None:
     # Instantiate ANN
     and_ann = AndAnn()
 
