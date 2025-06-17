@@ -13,17 +13,17 @@ class AndAnn:
         self.target_epochs = 10000
         self.target_error = 1.00e-15
         self.weights = self.initialize_weights()
-        self.bias = np.random.uniform(-1, 1)
+        self.bias = np.random.uniform(1, 10)
         self.training_data = parse_excel("data/training_data.xlsx")
 
     def initialize_weights(self) -> list[float]:
-        # Initialize weights using Xavier Uniform Initialization
-        limit = np.sqrt(6 / (self.fan_in + self.fan_out))
-        return np.random.uniform(-limit, limit, size=(self.fan_in, self.fan_out))
+        # Initialize weights using He normal initialization
+        std_dev = np.sqrt(2.0 / self.fan_in)
+        return np.random.normal(0, std_dev, self.fan_in)
 
     def train(self) -> tuple[float, float, float]:
         # Initialize weights and biases
-        w1_new, w2_new = self.weights[0][0], self.weights[1][0]
+        w1_new, w2_new = self.weights[0], self.weights[1]
         b1_new = self.bias
 
         # Main loop for epochs
