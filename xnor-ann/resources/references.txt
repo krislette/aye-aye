@@ -1,0 +1,2 @@
+Recap Matrix Multiplication: https://youtu.be/2spTnAiQg4M?si=glcRzvyyL4i0XU1f
+Matrix Multiplication in Python: https://youtu.be/zFg3OssYANU?si=ZQ9BptXo5ndLH2QK
