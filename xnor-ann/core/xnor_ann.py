@@ -1,11 +1,28 @@
+import pandas as pd
+import numpy as np
+
+
 class XnorAnn:
     def __init__(self):
         # TODO: Initialize parameters
         pass
 
     def init_training_data(self):
-        # TODO: Parse excel
-        pass
+        # Read excel first
+        df = pd.read_excel("data/training_data.xlsx")
+
+        # And then convert the dataframe to a numpy array
+        training_data = df.to_numpy()
+
+        # Params: orig_matrix, index to delete, axis=1 is column, axis=0 is row
+        training_inputs = np.delete(training_data, 2, axis=1)
+        print(training_inputs)
+
+        # Colon (:) means all rows, and then (2) just column 2
+        training_outputs = training_data[:, 2]
+        print(training_outputs)
+
+        return training_inputs, training_outputs
 
     def init_weights(self):
         # TODO: Init weights using He (for ReLU)
