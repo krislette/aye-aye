@@ -3,11 +3,11 @@ import numpy as np
 
 
 class XnorAnn:
-    def __init__(self):
+    def __init__(self) -> None:
         # TODO: Initialize parameters
         pass
 
-    def init_training_data(self):
+    def init_training_data(self) -> tuple[np.ndarray, np.ndarray]:
         # Read excel first
         df = pd.read_excel("data/training_data.xlsx")
 
@@ -24,22 +24,30 @@ class XnorAnn:
 
         return training_inputs, training_outputs
 
-    def init_weights(self):
+    def init_weights(self) -> None:
         # TODO: Init weights using He (for ReLU)
         pass
 
-    def relu(value: float) -> float:
+    def relu(self, value: float) -> float:
         # Basic implementation of ReLU
         return value if value > 0 else 0
 
-    def relu_derivative(value: float) -> float:
+    def relu_derivative(self, value: float) -> float:
         # Basic implementation of ReLU derivative
         return 1.0 if value > 0 else 0.0
 
-    def train(self):
+    def feedforward(self) -> None:
+        # TODO: Implement feedforward
+        pass
+
+    def backpropagation(self) -> None:
+        # TODO: Implement backprop
+        pass
+
+    def train(self) -> None:
         # TODO: Create main training logic
         pass
 
-    def predict(self):
+    def predict(self) -> None:
         # TODO: Create prediction logic
         pass
