@@ -24,17 +24,30 @@ class XnorAnn:
         training_inputs = np.delete(training_data, 2, axis=1)
 
         # Colon (:) means all rows, and then (2) just column 2
-        training_targets = training_data[:, 2]
+        training_targets = training_data[:, 2].reshape(-1, 1)
 
         return training_inputs, training_targets
 
-    def init_weights(self) -> np.ndarray:
+    def init_weights(self) -> tuple[np.ndarray, np.ndarray]:
         # Initialize weights using He initialization (for ReLU)
         mean = 0.0
-        std_dev = np.sqrt(2 / self.fan_in)
 
-        # Returns initial weights w the formula G(0.0, sqrt(2 / n)) [third param is size]
-        return np.random.normal(mean, std_dev, self.fan_in)
+        # For hidden layer first: 2 inputs x 3 neurons -> (2, 3)
+        # Initial hidden weights w the formula G(0.0, sqrt(2 / n)) [third param is size]
+        std_dev_hidden = np.sqrt(2 / self.fan_in)
+        hidden_weights = np.random.normal(
+            mean, std_dev_hidden, (self.fan_in, self.hidden_neurons)
+        )
+
+        # For output layer: 3 inputs x 1 output -> (3, 1)
+        # Initial output weight w the formula G(0.0, sqrt(2 / n)) [third param is size]
+        std_dev_output = np.sqrt(2 / self.hidden_neurons)
+        output_weights = np.random.normal(
+            mean, std_dev_output, (self.hidden_neurons, self.fan_out)
+        )
+
+        # Return both weight matrices (hidden and output)
+        return hidden_weights, output_weights
 
     def init_biases(self) -> np.ndarray:
         return np.zeros((1, self.hidden_neurons))
