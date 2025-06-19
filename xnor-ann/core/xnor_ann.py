@@ -22,11 +22,9 @@ class XnorAnn:
 
         # Params: orig_matrix, index to delete, axis=1 is column, axis=0 is row
         training_inputs = np.delete(training_data, 2, axis=1)
-        print(training_inputs)
 
         # Colon (:) means all rows, and then (2) just column 2
         training_outputs = training_data[:, 2]
-        print(training_outputs)
 
         return training_inputs, training_outputs
 
