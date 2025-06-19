@@ -36,20 +36,30 @@ class XnorAnn:
         # Returns initial weights w the formula G(0.0, sqrt(2 / n)) [third param is size]
         return np.random.normal(mean, std_dev, self.fan_in)
 
-    def relu(self, value: float) -> float:
-        # Basic implementation of ReLU
-        return value if value > 0 else 0
+    def init_biases(self) -> np.ndarray:
+        return np.zeros((1, self.hidden_neurons))
 
-    def relu_derivative(self, value: float) -> float:
-        # Basic implementation of ReLU derivative
-        return 1.0 if value > 0 else 0.0
+    def relu(self, values: np.ndarray) -> np.ndarray:
+        # Compares maximum between two values (ReLU) on matrices
+        # Ex: np.maximum(0, [-1, 2], [3, -4]) = [[0, 2], [3, 0]] <- ReLU!!!
+        return np.maximum(0, values)
 
-    def feedforward(self) -> None:
-        # TODO: Implement feedforward
-        pass
+    def relu_derivative(self, values: np.ndarray) -> np.ndarray:
+        # Compares if value is 0 or 1 (since derivative returns 0 or 1)
+        # Ex: [[-1, 2], [3, -4]] > 0 ? [False, True, True, False]
+        # Then .astype(int) converts booleans to int -> [0, 1, 1, 0] <- ReLU derivative!!!
+        return (values > 0).astype(int)
+
+    def feedforward(
+        self, inputs: np.ndarray, weights: np.ndarray, biases: np.ndarray
+    ) -> tuple[np.ndarray, np.ndarray]:
+        # Formula: (i1 * w1) + (i2 * w2) + bias
+        net_outputs = np.dot(inputs, weights) + biases
+        outputs = self.relu(net_outputs)
+        return net_outputs, outputs
 
     def backpropagation(self) -> None:
-        # TODO: Implement backprop
+        # 
         pass
 
     def train(self) -> None:
