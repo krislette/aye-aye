@@ -3,9 +3,15 @@ import numpy as np
 
 
 class XnorAnn:
-    def __init__(self) -> None:
-        # TODO: Initialize parameters
-        pass
+    def __init__(
+        self, fan_in: int, fan_out: int, hidden_neurons: int, learning_rate: float
+    ) -> None:
+        self.fan_in = fan_in
+        self.fan_out = fan_out
+        self.hidden_neurons = hidden_neurons
+        self.learning_rate = learning_rate
+        self.target_epochs = 10000
+        self.target_error = 1.00e-15
 
     def init_training_data(self) -> tuple[np.ndarray, np.ndarray]:
         # Read excel first
@@ -25,8 +31,12 @@ class XnorAnn:
         return training_inputs, training_outputs
 
     def init_weights(self) -> None:
-        # TODO: Init weights using He (for ReLU)
-        pass
+        # Initialize weights using He initialization (for ReLU)
+        mean = 0.0
+        std_dev = np.sqrt(2 / self.fan_in)
+
+        # Returns initial weights w the formula G(0.0, sqrt(2 / n)) [third param is size]
+        return np.random.normal(mean, std_dev, self.fan_in)
 
     def relu(self, value: float) -> float:
         # Basic implementation of ReLU
