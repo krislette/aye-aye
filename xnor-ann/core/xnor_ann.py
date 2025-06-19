@@ -50,7 +50,13 @@ class XnorAnn:
         return hidden_weights, output_weights
 
     def init_biases(self) -> np.ndarray:
-        return np.zeros((1, self.hidden_neurons))
+        # Init hidden biases with the size (1, 3) for 3 hidden neurons
+        hidden_biases = np.zeros((1, self.hidden_neurons))
+
+        # Then init output bias with the size of (1, 1) for 1 output neuron
+        output_biases = np.zeros((1, self.fan_out))
+
+        return hidden_biases, output_biases
 
     def relu(self, values: np.ndarray) -> np.ndarray:
         # Compares maximum between two values (ReLU) on matrices
