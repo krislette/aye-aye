@@ -78,15 +78,27 @@ class XnorAnn:
         return mse
 
     def feedforward(
-        self, inputs: np.ndarray, weights: np.ndarray, biases: np.ndarray
-    ) -> tuple[np.ndarray, np.ndarray]:
-        # Formula: (i1 * w1) + (i2 * w2) + bias
+        self,
+        inputs: np.ndarray,
+        hidden_weights: np.ndarray,
+        output_weights: np.ndarray,
+        hidden_biases: np.ndarray,
+        output_biases: np.ndarray,
+    ) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
+        # For hidden layer first
+        # Formula: (i1 * w1) + (i2 * w2) + bias then active with ReLU
         # Performs (1x2) dot (2x3) + (1x3) = (1x3)
-        net_outputs = np.dot(inputs, weights) + biases
-        outputs = self.relu(net_outputs)
+        hidden_net_outputs = np.dot(inputs, hidden_weights) + hidden_biases
+        hidden_outputs = self.relu(hidden_net_outputs)
 
-        # Returns the net output and activated output from 3 hidden neurons (1x3 matrix)
-        return net_outputs, outputs
+        # Then for output layer
+        # Formula: (i1 * w1) + (i2 * w2) + bias then active with ReLU
+        # Performs (1x3) dot (3x1) + (1x1) = (1x1)
+        final_net_outputs = np.dot(hidden_outputs, output_weights) + output_biases
+        final_outputs = self.relu(final_net_outputs)
+
+        # Then return net outputs & activated outputs for hidden and output layers
+        return hidden_net_outputs, hidden_outputs, final_net_outputs, final_outputs
 
     def backpropagation(
         self,
