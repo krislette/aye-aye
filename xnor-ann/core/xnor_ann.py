@@ -28,7 +28,7 @@ class XnorAnn:
 
         return training_inputs, training_outputs
 
-    def init_weights(self) -> None:
+    def init_weights(self) -> np.ndarray:
         # Initialize weights using He initialization (for ReLU)
         mean = 0.0
         std_dev = np.sqrt(2 / self.fan_in)
