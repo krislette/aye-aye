@@ -204,7 +204,7 @@ class XnorAnn:
         np.save("data/output_weights.npy", output_weights)
         np.save("data/output_biases.npy", output_biases)
 
-        print("Parameters saved")
+        print("> Parameters saved")
 
     def load_parameters(self):
         # Load trained parameters using load function of numpy
@@ -217,7 +217,7 @@ class XnorAnn:
             return hidden_weights, hidden_biases, output_weights, output_biases
         except FileNotFoundError:
             raise FileNotFoundError(
-                "Trained parameters not found. Please train the model first."
+                "> Trained parameters not found. Please train the model first."
             )
 
     def train(self) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
@@ -270,19 +270,19 @@ class XnorAnn:
 
             # Check if network converged
             if mean_squared_error <= self.target_error:
-                print(f"Converged at epoch {epoch} with error {mean_squared_error}")
+                print(f"\n> Converged at epoch {epoch} with error {mean_squared_error}")
                 break
 
-            # Print epoch every 100 for monitoring on the CLI
-            if epoch % 100 == 0:
-                print(f"Epoch: {epoch:<5} " f"| Error: {mean_squared_error:<12.8f} ")
+            # Print epoch every 1000 for monitoring on the CLI
+            if epoch % 1000 == 0:
+                print(f"Epoch: {epoch:<8} " f"| Error: {mean_squared_error:<12.8f} ")
 
         # Always save parameters after training (whether converged or not)
         self.save_parameters(
             hidden_weights, hidden_biases, output_weights, output_biases
         )
 
-        print(f"Final error: {mean_squared_error}")
+        print(f"> Final MSE: {mean_squared_error}")
 
         # Return final parameters even if not converged
         return hidden_weights, hidden_biases, output_weights, output_biases
