@@ -33,7 +33,7 @@ class XnorAnn:
     def init_weights(self) -> tuple[np.ndarray, np.ndarray]:
         mean = 0.0
 
-        # Initialize hidden weights using He initialization (for leaky_relu)
+        # Initialize hidden weights using He initialization (for Leaky ReLU)
         # For hidden layer first: 2 inputs x 8 neurons -> (2, 8)
         # Initial hidden weights w the formula G(0.0, sqrt(2 / n)) [third param is size]
         std_dev_hidden = np.sqrt(2 / self.fan_in)
@@ -96,13 +96,13 @@ class XnorAnn:
         output_biases: np.ndarray,
     ) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
         # For hidden layer first
-        # Formula: (i1 * w1) + (i2 * w2) + bias then active with leaky_relu
+        # Formula: (i1 * w1) + (i2 * w2) + bias then activate with leaky ReLU
         # Performs (200x2) dot (2x8) + (1x8) = (200x8)
         hidden_net_outputs = np.dot(inputs, hidden_weights) + hidden_biases
         hidden_outputs = self.leaky_relu(hidden_net_outputs)
 
         # Then for output layer
-        # Formula: (i1 * w1) + (i2 * w2) + bias then active with leaky_relu
+        # Formula: (i1 * w1) + (i2 * w2) + bias then activate with sigmoid
         # Performs (200x8) dot (8x1) + (1x1) = (200x1)
         final_net_outputs = np.dot(hidden_outputs, output_weights) + output_biases
         final_outputs = self.sigmoid(final_net_outputs)
@@ -134,7 +134,7 @@ class XnorAnn:
         output_delta = de_dout * dout_dnet
 
         # 1.2: Chain rule to get output weight gradients: (dE/dO) * (dO/dNet) * (dNet/d<input>)
-        # Output: (8x200) dot (200x1) = (8x1) gradients
+        # Output weight: (8x200) dot (200x1) = (8x1) gradients
         output_weight_gradients = np.dot(hidden_outputs.T, output_delta) / size
 
         # 1.3: Output bias gradients: dE/dB (1x1)
@@ -152,7 +152,7 @@ class XnorAnn:
         hidden_delta = de_dw * dw_dnet
 
         # 2.2: Chain rule to get hidden weight gradients
-        # Hidden: (2x200) dot (200x8) = (2x8) gradients
+        # Hidden weight: (2x200) dot (200x8) = (2x8) gradients
         hidden_weight_gradients = np.dot(inputs.T, hidden_delta) / size
 
         # 2.3: Hidden bias gradients: dE/dB (1x8)
@@ -198,7 +198,7 @@ class XnorAnn:
     def save_parameters(
         self, hidden_weights, hidden_biases, output_weights, output_biases
     ):
-        # Save trained params using nump save function
+        # Save trained params using numpy save function
         os.makedirs("data", exist_ok=True)
 
         # Save each parameter array separately
@@ -287,7 +287,7 @@ class XnorAnn:
             hidden_weights, hidden_biases, output_weights, output_biases
         )
 
-        # Call visualize to create diagram output
+        # Call visualizer to create diagram output
         visualizer.plot_ann_diagram(
             self.fan_in,
             self.hidden_neurons,
