@@ -66,7 +66,7 @@ class XnorAnn:
         return np.where(values > 0, values, 0.1 * values)
 
     def leaky_relu_derivative(self, values: np.ndarray) -> np.ndarray:
-        # Leaky ReLU derivative where if it is less than 0, we return the leak (0.1)
+        # Leaky ReLU derivative where if it is less than 0, return the leak (0.1)
         return np.where(values > 0, 1, 0.1)
 
     def sigmoid(self, values: np.ndarray) -> np.ndarray:
