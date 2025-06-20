@@ -1,4 +1,5 @@
 from core.xnor_ann import XnorAnn
+import numpy as np
 import sys
 
 
@@ -18,11 +19,18 @@ def main() -> None:
             output_biases,
         ) = xnor_ann.train()
 
-        print("\nTraining completed. Optimized parameters:")
-        print(f"Hidden Weights:\n{hidden_weights}")
-        print(f"Hidden Biases:\n{hidden_biases}")
-        print(f"Output Weights:\n{output_weights}")
-        print(f"Output Biases:\n{output_biases}")
+        # Set print options to a precision of 4 with no scientific notations
+        np.set_printoptions(precision=4, suppress=True)
+
+        # Then print results
+        print("\n-> Hidden Weights:")
+        print(hidden_weights)
+        print("\n-> Hidden Biases:")
+        print(hidden_biases)
+        print("\n-> Output Weights:")
+        print(output_weights)
+        print("\n-> Output Biases:")
+        print(output_biases)
     # If user wants to predict
     elif len(sys.argv) > 1 and sys.argv[1] == "predict":
         try:
