@@ -122,6 +122,7 @@ class XnorAnn:
     ) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
         size = inputs.shape[0]
 
+        # For 1: Simultaneously calculate (O-T)(0-0.25)(O1/2/3.../1)
         # 1.0: Start from output layer gradients
         # Calculate error derivative: dE/dO
         de_dout = final_outputs - targets
@@ -139,6 +140,7 @@ class XnorAnn:
         # 1.3: Output bias gradients: dE/dB (1x1)
         output_bias_gradients = np.sum(output_delta, axis=0, keepdims=True) / size
 
+        # For 2: Simultaneously calculate (O-T)(0-0.25)(W...)(1/leak)(I1/I2)
         # 2.0: Then next are hidden layer gradients
         # (200x1) dot (1x8) = (200x8)
         de_dw = np.dot(output_delta, output_weights.T)
