@@ -3,7 +3,7 @@ import sys
 
 
 def main() -> None:
-    # Params: fan_in=2 inputs, fan_out=1 output, 3 hidden neurons, learning rate=0.1
+    # Params: fan_in=2 inputs, fan_out=1 output, 8 hidden neurons, learning rate=0.1
     xnor_ann = XnorAnn(2, 1, 8, 0.1)
 
     # If user wants to train
