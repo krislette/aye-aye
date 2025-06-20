@@ -14,7 +14,6 @@ class XnorAnn:
         self.learning_rate = learning_rate
         self.target_epochs = 1000000
         self.target_error = 1e-5
-        self.visualizer = Visualizer()
 
     def init_training_data(self) -> tuple[np.ndarray, np.ndarray]:
         # Read excel first
@@ -227,6 +226,7 @@ class XnorAnn:
         inputs, targets = self.init_training_data()
         hidden_weights, output_weights = self.init_weights()
         hidden_biases, output_biases = self.init_biases()
+        visualizer = Visualizer()
 
         # Main training loop
         for epoch in range(self.target_epochs):
@@ -278,7 +278,7 @@ class XnorAnn:
             # Print epoch every 1000 for monitoring on the CLI
             if epoch % 1000 == 0:
                 print(f"Epoch: {epoch:<8} " f"| Error: {mean_squared_error:<12.8f} ")
-                self.visualizer.update_error(epoch, mean_squared_error)
+                visualizer.update_error(epoch, mean_squared_error)
 
         # Always save parameters after training (whether converged or not)
         self.save_parameters(
@@ -286,7 +286,7 @@ class XnorAnn:
         )
 
         # Call visualize to create diagram output
-        self.visualizer.plot_ann_diagram(
+        visualizer.plot_ann_diagram(
             self.fan_in,
             self.hidden_neurons,
             self.fan_out,
