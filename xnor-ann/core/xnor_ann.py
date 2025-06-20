@@ -33,7 +33,7 @@ class XnorAnn:
         mean = 0.0
 
         # Initialize hidden weights using He initialization (for leaky_relu)
-        # For hidden layer first: 2 inputs x 3 neurons -> (2, 3)
+        # For hidden layer first: 2 inputs x 8 neurons -> (2, 8)
         # Initial hidden weights w the formula G(0.0, sqrt(2 / n)) [third param is size]
         std_dev_hidden = np.sqrt(2 / self.fan_in)
         hidden_weights = np.random.normal(
@@ -41,7 +41,7 @@ class XnorAnn:
         )
 
         # Initialize output weights using Xavier initialization (for Sigmoid)
-        # For output layer: 3 inputs x 1 output -> (3, 1)
+        # For output layer: 8 inputs x 1 output -> (8, 1)
         # Initial output weight w the formula G(0.0, sqrt(2 / (fan_in + fan_out))) [third param is size]
         std_dev_output = np.sqrt(2 / (self.hidden_neurons + self.fan_out))
         output_weights = np.random.normal(
@@ -52,7 +52,7 @@ class XnorAnn:
         return hidden_weights, output_weights
 
     def init_biases(self) -> np.ndarray:
-        # Init hidden biases with the size (1, 3) for 3 hidden neurons
+        # Init hidden biases with the size (1, 8) for 8 hidden neurons
         hidden_biases = np.zeros((1, self.hidden_neurons))
 
         # Then init output bias with the size of (1, 1) for 1 output neuron
@@ -70,9 +70,11 @@ class XnorAnn:
         return np.where(values > 0, 1, 0.1)
 
     def sigmoid(self, values: np.ndarray) -> np.ndarray:
+        # Sigmoid implementation for matrices/arrays
         return 1 / (1 + np.exp(-values))
 
     def sigmoid_derivative(self, values: np.ndarray) -> np.ndarray:
+        # Store sigmoid activation result then get derivative using the formula
         sig = self.sigmoid(values)
         return sig * (1 - sig)
 
@@ -94,13 +96,13 @@ class XnorAnn:
     ) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
         # For hidden layer first
         # Formula: (i1 * w1) + (i2 * w2) + bias then active with leaky_relu
-        # Performs (200x2) dot (2x3) + (1x3) = (200x3)
+        # Performs (200x2) dot (2x8) + (1x8) = (200x8)
         hidden_net_outputs = np.dot(inputs, hidden_weights) + hidden_biases
         hidden_outputs = self.leaky_relu(hidden_net_outputs)
 
         # Then for output layer
         # Formula: (i1 * w1) + (i2 * w2) + bias then active with leaky_relu
-        # Performs (200x3) dot (3x1) + (1x1) = (200x1)
+        # Performs (200x8) dot (8x1) + (1x1) = (200x1)
         final_net_outputs = np.dot(hidden_outputs, output_weights) + output_biases
         final_outputs = self.sigmoid(final_net_outputs)
 
@@ -130,14 +132,14 @@ class XnorAnn:
         output_delta = de_dout * dout_dnet
 
         # 1.2: Chain rule to get output weight gradients: (dE/dO) * (dO/dNet) * (dNet/d<input>)
-        # Output: (3x200) dot (200x1) = (3x1) gradients
+        # Output: (8x200) dot (200x1) = (8x1) gradients
         output_weight_gradients = np.dot(hidden_outputs.T, output_delta) / size
 
         # 1.3: Output bias gradients: dE/dB (1x1)
         output_bias_gradients = np.sum(output_delta, axis=0, keepdims=True) / size
 
         # 2.0: Then next are hidden layer gradients
-        # (200x1) dot (1x3) = (200x3)
+        # (200x1) dot (1x8) = (200x8)
         de_dw = np.dot(output_delta, output_weights.T)
 
         # 2.1: Calculate activativation derivative
@@ -147,10 +149,10 @@ class XnorAnn:
         hidden_delta = de_dw * dw_dnet
 
         # 2.2: Chain rule to get hidden weight gradients
-        # Hidden: (2x200) dot (200x3) = (2x3) gradients
+        # Hidden: (2x200) dot (200x8) = (2x8) gradients
         hidden_weight_gradients = np.dot(inputs.T, hidden_delta) / size
 
-        # 2.3: Hidden bias gradients: dE/dB (1x3)
+        # 2.3: Hidden bias gradients: dE/dB (1x8)
         hidden_bias_gradients = np.sum(hidden_delta, axis=0, keepdims=True) / size
 
         return (
@@ -184,10 +186,10 @@ class XnorAnn:
         new_output_biases = output_biases - (self.learning_rate * output_bias_gradients)
 
         return (
-            new_hidden_weights,  # Shape: (2x3)
-            new_hidden_biases,  # Shape: (1x3)
-            new_output_weights,  # Shape: (3x1)
-            new_output_biases,  # Shape: (1x1)
+            new_hidden_weights,     # Shape: (2x8)
+            new_hidden_biases,      # Shape: (1x8)
+            new_output_weights,     # Shape: (8x1)
+            new_output_biases,      # Shape: (1x1)
         )
 
     def save_parameters(
