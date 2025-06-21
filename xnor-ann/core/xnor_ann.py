@@ -96,13 +96,13 @@ class XnorAnn:
         output_biases: np.ndarray,
     ) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
         # For hidden layer first
-        # Formula: (i1 * w1) + (i2 * w2) + bias then activate with leaky ReLU
+        # Formula: (i1 * w1) + (i2 * w2) + ... + bias then activate with leaky ReLU
         # Performs (200x2) dot (2x8) + (1x8) = (200x8)
         hidden_net_outputs = np.dot(inputs, hidden_weights) + hidden_biases
         hidden_outputs = self.leaky_relu(hidden_net_outputs)
 
         # Then for output layer
-        # Formula: (i1 * w1) + (i2 * w2) + bias then activate with sigmoid
+        # Formula: (i1 * w1) + (i2 * w2) + ... + bias then activate with sigmoid
         # Performs (200x8) dot (8x1) + (1x1) = (200x1)
         final_net_outputs = np.dot(hidden_outputs, output_weights) + output_biases
         final_outputs = self.sigmoid(final_net_outputs)
@@ -306,7 +306,7 @@ class XnorAnn:
 
     def predict(self, input: list[float]) -> float:
         try:
-            # Load parameters using the load params mmethod
+            # Load parameters using the load params method
             hidden_weights, hidden_biases, output_weights, output_biases = (
                 self.load_parameters()
             )
