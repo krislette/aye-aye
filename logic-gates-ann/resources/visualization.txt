@@ -1,0 +1,7 @@
+So the ANN is XNOR... and I'll be having 3 neurons for the hidden layer...
+
+Inputs  -> [0, 0]               # In matrix, this is 1x2
+Weights -> [[w11, w12, w13]     # In matrix, this is 2x3
+            [w21, w22, w23]]    # Meaninng we can apply matrix Multiplication
+----------------------------
+Nets    -> [0w11 + 0w21, 0w12 + 0w22, 0w13 + 0w23] # Then we'll have three net outputs at once!!! OHHH

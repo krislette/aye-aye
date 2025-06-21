@@ -1,0 +1,4 @@
+Optimization Idea: https://stackoverflow.com/questions/68032352/implement-cnn-forward-pass-using-matrix-multiplication-and-vectorization-instead
+Recap Matrix Multiplication: https://youtu.be/2spTnAiQg4M?si=glcRzvyyL4i0XU1f
+Matrix Multiplication in Python: https://youtu.be/zFg3OssYANU?si=ZQ9BptXo5ndLH2QK
+NNs from Scratch: https://www.geeksforgeeks.org/deep-learning/building-artificial-neural-networks-ann-from-scratch/
